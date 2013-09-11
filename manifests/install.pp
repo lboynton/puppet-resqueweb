@@ -5,8 +5,6 @@ class resqueweb::install (
   $version    = '1.24.1'
 ) {
 
-  require rbenv
-
     File {
     owner   => 'deploy',
     group   => 'nogroup',
@@ -85,13 +83,14 @@ class resqueweb::install (
   }
 
   # bundle resqueweb
-  exec { "/bin/ls | su - ${user}; bundle install":
+  exec { "bundle install":
     path    => [ "/bin/", "/sbin/" , "/usr/bin/", "/usr/sbin/", "/home/${user}/.rbenv/shims" ],
     cwd     => "${prefix}/resqueweb/current",
     require => Exec['untar-resqueweb-source'],
     creates => "${prefix}/resqueweb/current/Gemfile.lock",
-    alias   => "bundle-resqueweb"
-    }
+    alias   => "bundle-resqueweb",
+    user    => $user,
+  }
 
   # Ensure /var/www/resqueweb/current/log diretory exists
   if ! defined(File["${prefix}/resqueweb/current/log"]) {
