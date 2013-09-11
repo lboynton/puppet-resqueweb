@@ -95,8 +95,6 @@
 class resqueweb {
   include resqueweb::install
 
-  resqueweb::resource::config  { 'config.ru':      ensure => 'present' }
-
   resqueweb::resource::config {
     'config.ru':
       stages     => 'production',
